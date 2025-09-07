@@ -82,9 +82,9 @@ WSGI_APPLICATION = 'moviesstore.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ngopinath7moviesstore',
+        'NAME': 'ngopinath7$default',
         'USER': 'ngopinath7',
-        'PASSWORD': '',
+        'PASSWORD': 'kudoshinichi',
         'HOST': 'ngopinath7.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
