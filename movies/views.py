@@ -3,8 +3,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 #import movie model from the models file
 #Use this model to access database information
 #Review model to make reviews
-from .models import Movie, Review
+from .models import Movie, Review, ReviewUpvote
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 
 #Variable called movies is a list of dictionaries where each dictionary
 #represents information about a certain movie
@@ -80,4 +81,33 @@ def edit_review(request, id, review_id):
 def delete_review(request, id, review_id):
     review = get_object_or_404(Review, id=review_id, user=request.user)
     review.delete()
-    return redirect('movies.show', id=id)    
+    return redirect('movies.show', id=id)  
+
+def upvote_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    try:
+        # Try to create a new upvote record
+        ReviewUpvote.objects.create(review=review, user=request.user)
+        review.upvotes += 1
+        review.save()
+    except IntegrityError:
+        # This means the (review, user) pair already exists — ignore
+        pass
+
+    # Redirect back to the movie detail page
+    return redirect('movie_detail', id=review.movie.id)
+
+def movie_detail(request, id):
+    movie = get_object_or_404(Movie, id=id)
+    reviews = Review.objects.filter(movie=movie).order_by('-upvotes', '-date')
+
+    print("=== Reviews being sent to template ===")
+    for r in reviews:
+        print(r.comment, r.upvotes)
+        
+    return render(request, 'movie_detail.html', {
+        'template_data': {
+            'movie': movie,
+            'reviews': reviews,
+        }
+    })
