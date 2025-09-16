@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-4@0vn!tr#0$%r+v)dw%a@@mtccx@^g&v&m3-w!beh)#3rjlnd9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -121,7 +121,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -131,6 +131,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     BASE_DIR / 'moviesstore/static/',
 ]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 #BASE_DIR is the base directory of this project
 #MEDIA_ROOT specifies the filesystem path to the directory for uploaded media
