@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>My Subscription</h2>
+  <hr>
+  <p><b>Total Spent:</b> ${{ template_data.total_spent }}</p>
+  <p><b>Subscription Level:</b> {{ template_data.level }}</p>
+  {% if template_data.level == "Basic" %}
+    <p class="text-muted">Spend $15 to reach Medium level.</p>
+  {% elif template_data.level == "Medium" %}
+    <p class="text-muted">Spend $30 to reach Premium level.</p>
+  {% else %}
+    <p class="text-success">You are at the highest level 🎉</p>
+  {% endif %}
+</div>
+{% endblock content %}

@@ -9,6 +9,8 @@ from django.shortcuts import redirect
 from .forms import CustomUserCreationForm, CustomErrorList
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db.models import Sum
+from cart.models import Order
 
 #To log out & redirect users to home page
 @login_required
@@ -75,3 +77,26 @@ def orders(request):
     template_data['orders'] = request.user.order_set.all()
     return render(request, 'accounts/orders.html',
         {'template_data': template_data})
+
+@login_required
+def subscription_level(request):
+    # Calculate total amount the user has spent
+    total_spent = Order.objects.filter(user=request.user).aggregate(
+        total=Sum('total')
+    )['total'] or 0
+
+    # Decide subscription level
+    if total_spent < 15:
+        level = "Basic"
+    elif 15 <= total_spent < 30:
+        level = "Medium"
+    else:
+        level = "Premium"
+
+    return render(request, 'accounts/subscription.html', {
+        'template_data': {
+            'title': 'My Subscription',
+            'total_spent': total_spent,
+            'level': level,
+        }
+    })
