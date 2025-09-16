@@ -45,23 +45,6 @@
             </h6>
             <p class="card-text">{{ review.comment }}</p>
 
-            <!-- Like & Dislike buttons -->
-            <!-- Like & Dislike buttons -->
-            <div class="mt-2">
-              <form method="post" action="{% url 'like_review' review.id %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-success btn-sm">
-                  👍 Like ({{ review.likes_count }})
-                </button>
-              </form>
-
-              <form method="post" action="{% url 'dislike_review' review.id %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger btn-sm">
-                  👎 Dislike ({{ review.dislikes_count }})
-                </button>
-              </form>
-            </div>
 
             <!--edit button will appear if user is authenticated &
             user was the one who wrote the review-->
