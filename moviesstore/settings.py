@@ -132,8 +132,6 @@ STATICFILES_DIRS = [
     BASE_DIR / 'moviesstore/static/',
 ]
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
 #BASE_DIR is the base directory of this project
 #MEDIA_ROOT specifies the filesystem path to the directory for uploaded media
 #media is sub-directory within BASE_DIR
