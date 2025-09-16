@@ -33,14 +33,3 @@ class Review(models.Model):
     #Returns string representation of review
     def __str__(self):
         return str(self.id) + ' - ' + self.movie.name
-    upvotes = models.PositiveIntegerField(default=0)
-
-class ReviewUpvote(models.Model):
-    review = models.ForeignKey('Review', related_name='upvote_records', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ('review', 'user')  # ✅ Prevents duplicate upvotes
-
-    def __str__(self):
-        return f"{self.user.username} upvoted review {self.review.id}"

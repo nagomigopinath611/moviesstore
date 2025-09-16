@@ -45,20 +45,6 @@
             </h6>
             <p class="card-text">{{ review.comment }}</p>
 
-            <!--put it inside <li> section so that the upvote option
-              appears for each review-->
-
-            <div class="d-flex align-items-center mb-2">
-              <span class="me-2">👍 {{ review.upvotes }}</span>
-              {% if user.is_authenticated %}
-                <form action="{% url 'upvote_review' review.id %}" method="post" class="d-inline">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-sm btn-outline-success">
-                    Upvote
-                  </button>
-                </form>
-              {% endif %}
-            </div>
 
             <!--edit button will appear if user is authenticated &
             user was the one who wrote the review-->
