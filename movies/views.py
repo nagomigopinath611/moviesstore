@@ -3,9 +3,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 #import movie model from the models file
 #Use this model to access database information
 #Review model to make reviews
-from .models import Movie, Review
+from .models import Movie, Review, ReviewReaction
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
+from django.db.models import Count, Q
 
 #Variable called movies is a list of dictionaries where each dictionary
 #represents information about a certain movie
@@ -31,7 +32,13 @@ def show(request, id):
 #extract movie object based on the id
 #id is passed on by the url and received as a parameter for show function
     movie = Movie.objects.get(id=id)
-    reviews = Review.objects.filter(movie=movie)
+    #reviews = Review.objects.filter(movie=movie)
+    reviews = Review.objects.filter(movie=movie) \
+    .annotate(
+        likes_count=Count('reactions', filter=Q(reactions__reaction=ReviewReaction.LIKE)),
+        dislikes_count=Count('reactions', filter=Q(reactions__reaction=ReviewReaction.DISLIKE)),
+    )
+
     template_data = {}
     template_data['title'] = movie.name
     template_data['movie'] = movie
@@ -82,3 +89,30 @@ def delete_review(request, id, review_id):
     review = get_object_or_404(Review, id=review_id, user=request.user)
     review.delete()
     return redirect('movies.show', id=id)  
+
+@login_required
+def like_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    reaction, created = ReviewReaction.objects.get_or_create(
+        review=review,
+        user=request.user,
+        defaults={'reaction': ReviewReaction.LIKE}
+    )
+    if not created:
+        # If the user already reacted, update the reaction
+        reaction.reaction = ReviewReaction.LIKE
+        reaction.save()
+    return redirect('movies.show', id=review.movie.id)
+
+@login_required
+def dislike_review(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+    reaction, created = ReviewReaction.objects.get_or_create(
+        review=review,
+        user=request.user,
+        defaults={'reaction': ReviewReaction.DISLIKE}
+    )
+    if not created:
+        reaction.reaction = ReviewReaction.DISLIKE
+        reaction.save()
+    return redirect('movies.show', id=review.movie.id)

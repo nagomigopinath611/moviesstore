@@ -33,3 +33,19 @@ class Review(models.Model):
     #Returns string representation of review
     def __str__(self):
         return str(self.id) + ' - ' + self.movie.name
+
+class ReviewReaction(models.Model):
+    LIKE = 1
+    DISLIKE = -1
+
+    REACTION_CHOICES = (
+        (LIKE, 'Like'),
+        (DISLIKE, 'Dislike'),
+    )
+
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name="reactions")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reaction = models.SmallIntegerField(choices=REACTION_CHOICES)
+
+    class Meta:
+        unique_together = ('review', 'user')  # each user can react once
